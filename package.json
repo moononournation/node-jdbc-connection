@@ -1,0 +1,38 @@
+{
+  "name": "sybase-charset-tz",
+  "version": "1.3.0",
+  "description": "Changed to use JTDS JDBC driver, added charset and timezone parameter to node-sybase. Original node-sybase: A simple node.js wrapper around a java/jconnect app that provides easy access to Sybase Databases without having to install odbc or freetds.",
+  "dependencies": {
+    "JSONStream": "latest",
+    "my-package": "^0.0.0"
+  },
+  "main": "src/SybaseDB.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "homepage": "https://github.com/moononournation/node-sybase-charset-tz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moononournation/node-sybase-charset-tz.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "database",
+    "sybase",
+    "jtds",
+    "sql",
+    "java"
+  ],
+  "author": "moononournation <moononournation@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/moononournation/node-sybase-charset-tz/issues"
+  },
+  "devDependencies": {
+    "bluebird": "^3.4.6",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
