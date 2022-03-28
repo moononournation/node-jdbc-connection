@@ -1,38 +1,29 @@
 {
-  "name": "sybase-charset-tz",
-  "version": "1.3.0",
-  "description": "Changed to use JTDS JDBC driver, added charset and timezone parameter to node-sybase. Original node-sybase: A simple node.js wrapper around a java/jconnect app that provides easy access to Sybase Databases without having to install odbc or freetds.",
+  "name": "node-jdbc",
+  "version": "0.0.1",
+  "description": "Node.js JDBC driver",
   "dependencies": {
-    "JSONStream": "latest",
-    "my-package": "^0.0.0"
+    "JSONStream": "latest"
   },
-  "main": "src/SybaseDB.js",
-  "scripts": {
-    "test": "mocha"
-  },
-  "homepage": "https://github.com/moononournation/node-sybase-charset-tz",
+  "main": "src/NodeJDBC.js",
+  "homepage": "https://github.com/moononournation/node-jdbc",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moononournation/node-sybase-charset-tz.git"
+    "url": "git+https://github.com/moononournation/node-jdbc.git"
   },
   "license": "MIT",
   "keywords": [
     "database",
-    "sybase",
+    "java",
+    "jconn4",
+    "jdbc",
     "jtds",
+    "mssql",
     "sql",
-    "java"
+    "sybase"
   ],
   "author": "moononournation <moononournation@gmail.com>",
   "bugs": {
-    "url": "https://github.com/moononournation/node-sybase-charset-tz/issues"
-  },
-  "devDependencies": {
-    "bluebird": "^3.4.6",
-    "chai": "^3.5.0",
-    "mocha": "^3.0.2"
-  },
-  "directories": {
-    "test": "test"
+    "url": "https://github.com/moononournation/node-jdbc/issues"
   }
 }

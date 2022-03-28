@@ -1,3 +1,4 @@
+import com.sybase.jdbc4.jdbc.SybDriver;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,62 +16,47 @@ import net.sourceforge.jtds.jdbc.Driver;
  *
  * @author rod
  */
-public class SybaseDB {
+public class JdbcDB {
 
   public static final int TYPE_TIME_STAMP = 93;
   public static final int TYPE_DATE = 91;
 
   public static final int NUMBER_OF_THREADS = 5;
 
-  String host;
-  Integer port;
-  String dbname;
+  String connectionString;
   String username;
   String password;
-  String charset;
   String timezone;
   Properties props;
   Connection conn;
   DateFormat df;
   ExecutorService executor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-  public SybaseDB(
-    String host,
-    Integer port,
-    String dbname,
+  public JdbcDB(
+    String connectionString,
     String username,
     String password,
-    String charset,
     String timezone
   ) {
     this(
-      host,
-      port,
-      dbname,
+      connectionString,
       username,
       password,
-      charset,
       timezone,
       new Properties()
     );
   }
 
-  public SybaseDB(
-    String host,
-    Integer port,
-    String dbname,
+  public JdbcDB(
+    String connectionString,
     String username,
     String password,
-    String charset,
     String timezone,
     Properties props
   ) {
-    this.host = host;
-    this.port = port;
-    this.dbname = dbname;
+    this.connectionString = connectionString;
     this.username = username;
     this.password = password;
-    this.charset = charset;
     this.timezone = timezone;
     this.props = props;
     this.props.put("USER", username);
@@ -85,19 +71,9 @@ public class SybaseDB {
 
   public boolean connect() {
     try {
+      Class.forName("com.sybase.jdbc4.jdbc.SybDriver").newInstance();
       Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
-      conn =
-        DriverManager.getConnection(
-          "jdbc:jtds:sybase://" +
-          host +
-          ":" +
-          port +
-          "/" +
-          dbname +
-          ";charset=" +
-          charset,
-          props
-        );
+      conn = DriverManager.getConnection(connectionString, props);
       return true;
     } catch (Exception ex) {
       ex.printStackTrace(System.err);

@@ -39,12 +39,9 @@ public class StdInputReader {
       if (type.equals("connect")) {
         ConnectRequest request = new ConnectRequest();
         request.msgId = (int) val.get("msgId");
-        request.host = (String) val.get("host");
-        request.port = Integer.parseInt((String) val.get("port"));
-        request.dbname = (String) val.get("dbname");
+        request.connectionString = (String) val.get("connectionString");
         request.username = (String) val.get("username");
         request.password = (String) val.get("password");
-        request.charset = (String) val.get("charset");
         request.timezone = (String) val.get("timezone");
         request.javaStartTime = startTime;
         for (SQLRequestListener l : listeners) l.connect(request);

@@ -6,14 +6,14 @@ var fs = require("fs");
 var path = require("path");
 var lastDbId = 0;
 
-function Sybase(logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = false } = {}) {
+function NodeJDBC(logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = false } = {}) {
     this.logTiming = (logTiming == true);
     this.encoding = encoding;
     this.extraLogs = extraLogs;
 
     this.pathToJavaBridge = pathToJavaBridge;
     if (this.pathToJavaBridge === undefined) {
-        this.pathToJavaBridge = path.resolve(__dirname, "..", "JavaSybaseLink", "dist", "JavaSybaseLink.jar");
+        this.pathToJavaBridge = path.resolve(__dirname, "..", "JdbcLink", "dist", "JdbcLink.jar");
     }
 
     this.queryCount = 0;
@@ -28,23 +28,20 @@ function Sybase(logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = fa
     that.javaDB.stderr.setEncoding(that.encoding).on("data", function (err) { that.onSQLError.call(that, err); });
 }
 
-Sybase.prototype.log = function (msg) {
+NodeJDBC.prototype.log = function (msg) {
     if (this.extraLogs) {
         console.log(msg);
     }
 }
 
-Sybase.prototype.connect = function (host, port, dbname, username, password, charset, timezone, callback) {
+NodeJDBC.prototype.connect = function (connectionString, username, password, timezone, callback) {
     var hrstart = process.hrtime();
     var msg = {};
     msg.type = "connect";
     msg.msgId = ++this.queryCount;
-    msg.host = host;
-    msg.port = port;
-    msg.dbname = dbname;
+    msg.connectionString = connectionString;
     msg.username = username;
     msg.password = password;
-    msg.charset = charset;
     msg.timezone = timezone;
     msg.sentTime = (new Date()).getTime();
     var strMsg = JSON.stringify(msg).replace(/[\n]/g, '\\n');
@@ -59,7 +56,7 @@ Sybase.prototype.connect = function (host, port, dbname, username, password, cha
     this.log("sql request written: " + strMsg);
 };
 
-Sybase.prototype.close = function (dbId, callback) {
+NodeJDBC.prototype.close = function (dbId, callback) {
     var hrstart = process.hrtime();
     var msg = {};
     msg.type = "close";
@@ -78,7 +75,7 @@ Sybase.prototype.close = function (dbId, callback) {
     this.log("sql request written: " + strMsg);
 }
 
-Sybase.prototype.query = function (dbId, sql, callback) {
+NodeJDBC.prototype.query = function (dbId, sql, callback) {
     var hrstart = process.hrtime();
     var msg = {};
     msg.type = "query";
@@ -98,17 +95,17 @@ Sybase.prototype.query = function (dbId, sql, callback) {
     this.log("sql request written: " + strMsg);
 };
 
-Sybase.prototype.getLastDbId = function () {
+NodeJDBC.prototype.getLastDbId = function () {
     return this.lastDbId;
 }
 
-Sybase.prototype.kill = function () {
+NodeJDBC.prototype.kill = function () {
     if (this.javaDB.kill) {
         this.javaDB.kill();
     }
 }
 
-Sybase.prototype.onResponse = function (jsonMsg) {
+NodeJDBC.prototype.onResponse = function (jsonMsg) {
     var err = jsonMsg.error;
     var request = this.currentMessages[jsonMsg.msgId];
     delete this.currentMessages[jsonMsg.msgId];
@@ -129,7 +126,7 @@ Sybase.prototype.onResponse = function (jsonMsg) {
     request.callback(jsonMsg.dbId, err, result);
 };
 
-Sybase.prototype.onSQLError = function (data) {
+NodeJDBC.prototype.onSQLError = function (data) {
     if (this.extraLogs) {
         console.log(data);
     }
@@ -149,4 +146,4 @@ Sybase.prototype.onSQLError = function (data) {
     // });
 };
 
-module.exports = Sybase;
+module.exports = NodeJDBC;

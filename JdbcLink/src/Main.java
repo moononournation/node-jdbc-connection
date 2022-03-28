@@ -32,13 +32,10 @@ public class Main implements SQLRequestListener {
     JSONObject response = new JSONObject();
     response.put("msgId", request.msgId);
     MyProperties props = new MyProperties("sybaseConfig.properties");
-    SybaseDB db = new SybaseDB(
-      request.host,
-      request.port,
-      request.dbname,
+    JdbcDB db = new JdbcDB(
+      request.connectionString,
       request.username,
       request.password,
-      request.charset,
       request.timezone,
       props.properties
     );
@@ -59,13 +56,13 @@ public class Main implements SQLRequestListener {
   }
 
   public void sqlRequest(SQLRequest request) {
-    SybaseDB db = (SybaseDB) dbMap.get(request.dbId);
+    JdbcDB db = (JdbcDB) dbMap.get(request.dbId);
     db.execSQL(request);
     //System.out.println(result);
   }
 
   public void close(CloseRequest request) {
-    SybaseDB db = (SybaseDB) dbMap.get(request.dbId);
+    JdbcDB db = (JdbcDB) dbMap.get(request.dbId);
     db.close();
     dbMap.remove(request.dbId);
     JSONObject response = new JSONObject();

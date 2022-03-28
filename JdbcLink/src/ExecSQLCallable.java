@@ -75,8 +75,8 @@ public class ExecSQLCallable implements Callable<String> {
 
             int dataType = meta.getColumnType(c);
             switch (dataType) {
-              case SybaseDB.TYPE_TIME_STAMP:
-              case SybaseDB.TYPE_DATE:
+              case JdbcDB.TYPE_TIME_STAMP:
+              case JdbcDB.TYPE_DATE:
                 Timestamp sqlTimestamp = rs.getTimestamp(c);
                 if (sqlTimestamp != null) {
                   String my8601formattedDate = df.format(
