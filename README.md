@@ -1,5 +1,5 @@
-node-jdbc
----------
+node-jdbc-connection
+--------------------
 
 A simple node.js wrapper around a Java application that provides easy access to databases via jdbc. The main goal is to allow easy installation without the requirements of installing and configuring odbc or freetds. You do however have to have java 1.5 or newer installed. (rewrite from https://github.com/moononournation/node-sybase-charset-tz.git)
 
@@ -15,14 +15,14 @@ install
 ### git
 
 ```bash
-git clone https://github.com/moononournation/node-jdbc.git
-cd node-jdbc
+git clone https://github.com/moononournation/node-jdbc-connection.git
+cd node-jdbc-connection
 node-gyp configure build
 ```
 ### npm
 
 ```bash
-npm install node-jdbc
+npm install node-jdbc-connection
 ```
 
 quick example
@@ -32,8 +32,8 @@ quick example
 - timezone: Please refer to [[Wiki](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)] for supported TZ database name, empty string means no timezone information in datetime string format
 
 ```javascript
-var NodeJDBC = require('node-jdbc'),
-	jdbc = new NodeJDBC();
+var NodeJdbcConnection = require('node-jdbc-connection'),
+	jdbc = new NodeJdbcConnection();
 
 jdbc.connect(
   'connectionString',

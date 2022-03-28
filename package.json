@@ -1,15 +1,15 @@
 {
-  "name": "node-jdbc",
+  "name": "node-jdbc-connection-connection",
   "version": "0.0.1",
   "description": "Node.js JDBC driver",
   "dependencies": {
     "JSONStream": "latest"
   },
-  "main": "src/NodeJDBC.js",
-  "homepage": "https://github.com/moononournation/node-jdbc",
+  "main": "src/NodeJdbcConnection.js",
+  "homepage": "https://github.com/moononournation/node-jdbc-connection",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moononournation/node-jdbc.git"
+    "url": "git+https://github.com/moononournation/node-jdbc-connection.git"
   },
   "license": "MIT",
   "keywords": [
@@ -24,6 +24,6 @@
   ],
   "author": "moononournation <moononournation@gmail.com>",
   "bugs": {
-    "url": "https://github.com/moononournation/node-jdbc/issues"
+    "url": "https://github.com/moononournation/node-jdbc-connection/issues"
   }
 }

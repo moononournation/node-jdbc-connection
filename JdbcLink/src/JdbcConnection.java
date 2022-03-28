@@ -16,7 +16,7 @@ import net.sourceforge.jtds.jdbc.Driver;
  *
  * @author rod
  */
-public class JdbcDB {
+public class JdbcConnection {
 
   public static final int TYPE_TIME_STAMP = 93;
   public static final int TYPE_DATE = 91;
@@ -32,7 +32,7 @@ public class JdbcDB {
   DateFormat df;
   ExecutorService executor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-  public JdbcDB(
+  public JdbcConnection(
     String connectionString,
     String username,
     String password,
@@ -47,7 +47,7 @@ public class JdbcDB {
     );
   }
 
-  public JdbcDB(
+  public JdbcConnection(
     String connectionString,
     String username,
     String password,

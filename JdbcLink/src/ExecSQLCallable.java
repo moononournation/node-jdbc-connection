@@ -75,8 +75,8 @@ public class ExecSQLCallable implements Callable<String> {
 
             int dataType = meta.getColumnType(c);
             switch (dataType) {
-              case JdbcDB.TYPE_TIME_STAMP:
-              case JdbcDB.TYPE_DATE:
+              case JdbcConnection.TYPE_TIME_STAMP:
+              case JdbcConnection.TYPE_DATE:
                 Timestamp sqlTimestamp = rs.getTimestamp(c);
                 if (sqlTimestamp != null) {
                   String my8601formattedDate = df.format(

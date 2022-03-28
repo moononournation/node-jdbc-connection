@@ -6,7 +6,7 @@ var fs = require("fs");
 var path = require("path");
 var lastDbId = 0;
 
-function NodeJDBC(logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = false } = {}) {
+function NodeJdbcConnection(logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = false } = {}) {
     this.logTiming = (logTiming == true);
     this.encoding = encoding;
     this.extraLogs = extraLogs;
@@ -28,13 +28,13 @@ function NodeJDBC(logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = 
     that.javaDB.stderr.setEncoding(that.encoding).on("data", function (err) { that.onSQLError.call(that, err); });
 }
 
-NodeJDBC.prototype.log = function (msg) {
+NodeJdbcConnection.prototype.log = function (msg) {
     if (this.extraLogs) {
         console.log(msg);
     }
 }
 
-NodeJDBC.prototype.connect = function (connectionString, username, password, timezone, callback) {
+NodeJdbcConnection.prototype.connect = function (connectionString, username, password, timezone, callback) {
     var hrstart = process.hrtime();
     var msg = {};
     msg.type = "connect";
@@ -56,7 +56,7 @@ NodeJDBC.prototype.connect = function (connectionString, username, password, tim
     this.log("sql request written: " + strMsg);
 };
 
-NodeJDBC.prototype.close = function (dbId, callback) {
+NodeJdbcConnection.prototype.close = function (dbId, callback) {
     var hrstart = process.hrtime();
     var msg = {};
     msg.type = "close";
@@ -75,7 +75,7 @@ NodeJDBC.prototype.close = function (dbId, callback) {
     this.log("sql request written: " + strMsg);
 }
 
-NodeJDBC.prototype.query = function (dbId, sql, callback) {
+NodeJdbcConnection.prototype.query = function (dbId, sql, callback) {
     var hrstart = process.hrtime();
     var msg = {};
     msg.type = "query";
@@ -95,17 +95,17 @@ NodeJDBC.prototype.query = function (dbId, sql, callback) {
     this.log("sql request written: " + strMsg);
 };
 
-NodeJDBC.prototype.getLastDbId = function () {
+NodeJdbcConnection.prototype.getLastDbId = function () {
     return this.lastDbId;
 }
 
-NodeJDBC.prototype.kill = function () {
+NodeJdbcConnection.prototype.kill = function () {
     if (this.javaDB.kill) {
         this.javaDB.kill();
     }
 }
 
-NodeJDBC.prototype.onResponse = function (jsonMsg) {
+NodeJdbcConnection.prototype.onResponse = function (jsonMsg) {
     var err = jsonMsg.error;
     var request = this.currentMessages[jsonMsg.msgId];
     delete this.currentMessages[jsonMsg.msgId];
@@ -126,7 +126,7 @@ NodeJDBC.prototype.onResponse = function (jsonMsg) {
     request.callback(jsonMsg.dbId, err, result);
 };
 
-NodeJDBC.prototype.onSQLError = function (data) {
+NodeJdbcConnection.prototype.onSQLError = function (data) {
     if (this.extraLogs) {
         console.log(data);
     }
@@ -146,4 +146,4 @@ NodeJDBC.prototype.onSQLError = function (data) {
     // });
 };
 
-module.exports = NodeJDBC;
+module.exports = NodeJdbcConnection;
