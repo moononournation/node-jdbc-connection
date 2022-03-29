@@ -36,7 +36,7 @@ var NodeJdbcConnection = require('node-jdbc-connection'),
 	jdbc = new NodeJdbcConnection();
 
 jdbc.connect(
-  // 'jdbc:sybase:Tds:host:port/db;charset=Big5_HKSCS', // connect to Sybase DB server connect with JConnect Type 4 Driver
+  // 'jdbc:sybase:Tds:host:port/db', // connect to Sybase DB server connect with JConnect Type 4 Driver
   // 'jdbc:jtds:sybase://host:port/db;charset=Big5_HKSCS', // connect to Sybase DB server connect with jTDS Driver
   // 'jdbc:jtds:sqlserver://host:port/db;charset=Big5_HKSCS', // connect to MS SQL DB server connect with jTDS Driver
   'connectionString',
