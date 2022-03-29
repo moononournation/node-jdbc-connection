@@ -71,8 +71,8 @@ public class JdbcConnection {
 
   public boolean connect() {
     try {
-      Class.forName("com.sybase.jdbc4.jdbc.SybDriver").newInstance();
-      Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
+      // Class.forName("com.sybase.jdbc4.jdbc.SybDriver").newInstance();
+      // Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
       conn = DriverManager.getConnection(connectionString, props);
       return true;
     } catch (Exception ex) {
