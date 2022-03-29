@@ -1,5 +1,5 @@
 {
-  "name": "node-jdbc-connection-connection",
+  "name": "node-jdbc-connection",
   "version": "0.0.1",
   "description": "Node.js JDBC driver",
   "dependencies": {
