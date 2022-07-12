@@ -6,10 +6,9 @@ var fs = require("fs");
 var path = require("path");
 var lastDbId = 0;
 
-function NodeJdbcConnection(logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = false } = {}) {
-    this.logTiming = (logTiming == true);
-    this.encoding = encoding;
-    this.extraLogs = extraLogs;
+function NodeJdbcConnection(verbose, pathToJavaBridge) {
+    this.verbose = (verbose == true);
+    this.encoding = "utf8";
 
     this.pathToJavaBridge = pathToJavaBridge;
     if (this.pathToJavaBridge === undefined) {
@@ -29,7 +28,7 @@ function NodeJdbcConnection(logTiming, pathToJavaBridge, { encoding = "utf8", ex
 }
 
 NodeJdbcConnection.prototype.log = function (msg) {
-    if (this.extraLogs) {
+    if (this.verbose) {
         console.log(msg);
     }
 }
@@ -120,14 +119,15 @@ NodeJdbcConnection.prototype.onResponse = function (jsonMsg) {
     var hrend = process.hrtime(request.hrstart);
     var javaDuration = (jsonMsg.javaEndTime - jsonMsg.javaStartTime);
 
-    if (this.logTiming)
+    if (this.verbose) {
         console.log("Execution time (hr): %ds %dms dbTime: %dms dbSendTime: %d sql=%s", hrend[0], hrend[1] / 1000000, javaDuration, sendTimeMS, request.sql);
+    }
     this.lastDbId = jsonMsg.dbId;
     request.callback(jsonMsg.dbId, err, result);
 };
 
 NodeJdbcConnection.prototype.onSQLError = function (data) {
-    if (this.extraLogs) {
+    if (this.verbose) {
         console.log(data);
     }
     // var error = new Error(data);
