@@ -6,8 +6,8 @@ var fs = require("fs");
 var path = require("path");
 var lastDbId = 0;
 
-function NodeJdbcConnection(verbose, pathToJavaBridge) {
-    this.verbose = (verbose == true);
+function NodeJdbcConnection(verboseLevel, pathToJavaBridge) {
+    this.verboseLevel = verboseLevel;
     this.encoding = "utf8";
 
     this.pathToJavaBridge = pathToJavaBridge;
@@ -27,17 +27,16 @@ function NodeJdbcConnection(verbose, pathToJavaBridge) {
     that.javaDB.stderr.setEncoding(that.encoding).on("data", function (err) { that.onSQLError.call(that, err); });
 }
 
-NodeJdbcConnection.prototype.log = function (msg) {
-    if (this.verbose) {
-        console.log(msg);
-    }
-}
-
 NodeJdbcConnection.prototype.connect = function (connectionString, username, password, timezone, callback) {
     var hrstart = process.hrtime();
     var msg = {};
     msg.type = "connect";
     msg.msgId = ++this.queryCount;
+    if (this.verboseLevel >= 2) {
+        console.log("connect, connectionString: " + connectionString + ", queryCount: " + this.queryCount);
+    } else if (this.verboseLevel >= 1) {
+        console.log("connect, queryCount: " + this.queryCount);
+    }
     msg.connectionString = connectionString;
     msg.username = username;
     msg.password = password;
@@ -47,12 +46,12 @@ NodeJdbcConnection.prototype.connect = function (connectionString, username, pas
     msg.callback = callback;
     msg.hrstart = hrstart;
 
-    this.log("this: " + this + " currentMessages: " + this.currentMessages + " this.queryCount: " + this.queryCount);
-
     this.currentMessages[msg.msgId] = msg;
 
+    if (this.verboseLevel >= 2) {
+        console.log("strMsg: " + strMsg);
+    }
     this.javaDB.stdin.write(strMsg + "\n");
-    this.log("sql request written: " + strMsg);
 };
 
 NodeJdbcConnection.prototype.close = function (dbId, callback) {
@@ -60,18 +59,21 @@ NodeJdbcConnection.prototype.close = function (dbId, callback) {
     var msg = {};
     msg.type = "close";
     msg.msgId = ++this.queryCount;
+    if (this.verboseLevel >= 1) {
+        console.log("close, dbId: " + dbId + " queryCount: " + this.queryCount);
+    }
     msg.dbId = dbId;
     msg.sentTime = (new Date()).getTime();
     var strMsg = JSON.stringify(msg).replace(/[\n]/g, '\\n');
     msg.callback = callback;
     msg.hrstart = hrstart;
 
-    this.log("this: " + this + " currentMessages: " + this.currentMessages + " this.queryCount: " + this.queryCount);
-
     this.currentMessages[msg.msgId] = msg;
 
+    if (this.verboseLevel >= 2) {
+        console.log("strMsg: " + strMsg);
+    }
     this.javaDB.stdin.write(strMsg + "\n");
-    this.log("sql request written: " + strMsg);
 }
 
 NodeJdbcConnection.prototype.query = function (dbId, sql, callback) {
@@ -79,6 +81,11 @@ NodeJdbcConnection.prototype.query = function (dbId, sql, callback) {
     var msg = {};
     msg.type = "query";
     msg.msgId = ++this.queryCount;
+    if (this.verboseLevel >= 2) {
+        console.log("query, dbId: " + dbId + ", sql: " + sql + ", queryCount: " + this.queryCount);
+    } else if (this.verboseLevel >= 1) {
+        console.log("query, dbId: " + dbId + ", queryCount: " + this.queryCount);
+    }
     msg.dbId = dbId;
     msg.sql = sql;
     msg.sentTime = (new Date()).getTime();
@@ -86,12 +93,12 @@ NodeJdbcConnection.prototype.query = function (dbId, sql, callback) {
     msg.callback = callback;
     msg.hrstart = hrstart;
 
-    this.log("this: " + this + " currentMessages: " + this.currentMessages + " this.queryCount: " + this.queryCount);
-
     this.currentMessages[msg.msgId] = msg;
 
+    if (this.verboseLevel >= 2) {
+        console.log("strMsg: " + strMsg);
+    }
     this.javaDB.stdin.write(strMsg + "\n");
-    this.log("sql request written: " + strMsg);
 };
 
 NodeJdbcConnection.prototype.getLastDbId = function () {
@@ -119,17 +126,16 @@ NodeJdbcConnection.prototype.onResponse = function (jsonMsg) {
     var hrend = process.hrtime(request.hrstart);
     var javaDuration = (jsonMsg.javaEndTime - jsonMsg.javaStartTime);
 
-    if (this.verbose) {
+    if (this.verboseLevel >= 2) {
         console.log("Execution time (hr): %ds %dms dbTime: %dms dbSendTime: %d sql=%s", hrend[0], hrend[1] / 1000000, javaDuration, sendTimeMS, request.sql);
     }
+
     this.lastDbId = jsonMsg.dbId;
     request.callback(jsonMsg.dbId, err, result);
 };
 
 NodeJdbcConnection.prototype.onSQLError = function (data) {
-    if (this.verbose) {
-        console.log(data);
-    }
+    console.log(data);
     // var error = new Error(data);
 
     // var callBackFunctions = [];
